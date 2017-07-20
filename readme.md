@@ -125,7 +125,7 @@ Example request:
 #### GET /paintings
 Using a `GET` to `localhost:4000/paintings` will display all of the paintings in the database.
 
-###### Paginating and Limiting Results
+##### Paginating and Limiting Results
 
 This API will default to showing you 5 paintings at a time, so if you want to move to the next page or change the limit you will need to modify your request.
 
@@ -143,7 +143,7 @@ By using the `lastItem` query parameter you will be telling the API what the las
 
 >Remember: This API defaults to 5 items per page.
 
-###### Filtering
+##### Filtering
 
 You can also filter the results by `name`, `movement`, `artist` and `yearCreated` fields. This is going to be a pretty similar to limiting and paginating. Here's an example request and response:
 
