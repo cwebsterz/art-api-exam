@@ -37,7 +37,7 @@ app.get('/', function(req, res, next) {
 ////CREATE////
 //////////////
 
-app.post('/paintings', function(req, res, next) {
+app.post('/art/paintings', function(req, res, next) {
   const paint = pathOr(null, ['body'], req)
   const checkResults = checkPaintingReqdFields(paint)
 
@@ -56,7 +56,7 @@ app.post('/paintings', function(req, res, next) {
 ////READ////
 ////////////
 
-app.get('/paintings/:id', function(req, res, next) {
+app.get('/art/paintings/:id', function(req, res, next) {
   const paintId = pathOr(null, ['params', 'id'], req)
   dal.getPainting(paintId, function(err, data) {
     if (err) return next(new HTTPError(err.status, err.message, err))
@@ -72,7 +72,7 @@ app.get('/paintings/:id', function(req, res, next) {
 ////UPDATE////
 //////////////
 
-app.put('/paintings/:id', function(req, res, next) {
+app.put('/art/paintings/:id', function(req, res, next) {
   const paintId = pathOr(null, ['params', 'id'], req)
   const body = pathOr(null, ['body'], req)
   const checkResults = checkUpdatedPaintingReqdFields(body)
@@ -94,7 +94,7 @@ app.put('/paintings/:id', function(req, res, next) {
 ////DELETE////
 //////////////
 
-app.delete('/paintings/:id', function(req, res, next) {
+app.delete('/art/paintings/:id', function(req, res, next) {
   const paintId = pathOr(null, ['params', 'id'], req)
 
   dal.deletePainting(paintId, callbackHelper(next, res))
@@ -104,7 +104,7 @@ app.delete('/paintings/:id', function(req, res, next) {
 ////LIST////
 ////////////
 
-app.get('/paintings', function(req, res, next) {
+app.get('/art/paintings', function(req, res, next) {
   const paintingFilter = pathOr(null, ['query', 'filter'], req)
   const limit = pathOr(5, ['query', 'limit'], req)
   const lastItem = pathOr(null, ['query', 'lastItem'], req)
