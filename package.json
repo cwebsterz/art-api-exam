@@ -4,7 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "load": "node load-data.js",
+    "loadIndex": "node load-indexes.js"
   },
   "keywords": [],
   "author": "",
