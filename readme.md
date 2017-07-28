@@ -220,7 +220,7 @@ Response:
     }
 ```
 
-##### Grouping
+#### Grouping
 
 There are two additional endpoints you can check out, however these two are going to be read-only; they're just another way to look at the data you're storing.
 
