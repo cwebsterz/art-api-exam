@@ -120,6 +120,18 @@ app.get('/art/paintings', function(req, res, next) {
   )
 })
 
+////Group By Location////
+
+app.get('/art/reports/countbycity', function(req, res, next) {
+  dal.byLocation(callbackHelper(next, res))
+})
+
+////Group By Movement////
+
+app.get('/art/reports/countbymovement', function(req, res, next) {
+  dal.byMovement(callbackHelper(next, res))
+})
+
 ////Callbacker Helper (Just add callback!)////
 
 const callbackHelper = (next, res) => (err, data) => {

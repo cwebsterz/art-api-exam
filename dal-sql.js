@@ -43,6 +43,13 @@ const listPaintings = (lastItem, filter, limit, cb) => {
   )
 }
 
+////Group By////
+
+const byLocation = cb => dalHelper.groupBy('art.groupbycity', 'city', cb)
+
+const byMovement = cb =>
+  dalHelper.groupBy('art.groupbymovement', 'movement', cb)
+
 ////Formatters////
 
 const prepPaintingForInsert = painting => {
@@ -67,7 +74,9 @@ const dal = {
   getPainting,
   updatePainting,
   deletePainting,
-  listPaintings
+  listPaintings,
+  byLocation,
+  byMovement
 }
 
 module.exports = dal
