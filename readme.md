@@ -20,7 +20,19 @@ $ npm install
 
 ## Setting up your Environment
 
-You'll need to copy the contents of the **.env-example** file and paste them into your own **.env** file and then set up the following environment variables with your own CouchDB information:
+You'll need to copy the contents of the **.env-example** file and paste them into your own **.env** file and then set up the following environment variables with your own CouchDB or MySQL information:
+
+For MySQL you'll want to be sure to set up the following variables:
+
+- `MYSQL_HOST=127.0.0.1`
+- `MYSQL_PORT=3306`
+- `MYSQL_USER="root"`
+- `MYSQL_PASSWORD=<your password here>`
+- `MYSQL_DATABASE=art`
+
+>Tip: you can just copy the variables and input your own password.
+
+And, for CouchDB you'll want to set up some variables like this:
 
 - `COUCHDB_URL`
 - `COUCHDB_NAME`
@@ -33,7 +45,17 @@ COUCHDB_URL=https://<DB KEY>:<SECRET>@<BASE URL TO CLOUDANT>.com/
 
 ## Loading Data & Indexes
 
-I made it easy for you to load your data and indexes. All you have to do is to run these two commands:
+Wether you're using CouchDB or MySQL, I've made it easy for you to load your data and indexes.
+
+For MySQL, just copy and paste this into your command line:
+
+```
+$ cd sql-scripts
+$ mysql < art.sql -u root -p -h 127.0.0.1 -P 3306
+```
+You'll be prompted to enter your password, go ahead and then you're all set.
+
+For CouchDB All you have to do is to run these two commands:
 
 ```
 $ npm run load
@@ -42,12 +64,18 @@ $ npm run loadIndex
 
 ## Starting Up
 
-After you've done all those steps, run the `npm start` command and start it up! It's going to default to port 4000. Enjoy!
+Similar to the previous steps, there are two different routes to go here depending on what database you are using. It's going to default to MySQL, but both are easy.
+
+For MySQL, just run `npm start`
+
+And for CouchDB, copy and paste this into your command line: `DAL=dal node app.js`
+
+>The port will default to 4000, and you'll see that indicated in your terminal after you run either of the two commands.
 
 ## Endpoints
 
 #### POST /art/paintings
-Using a `POST` you can create a new painting item in the database. `name`,`movement`,`artist`,`yearCreated`, and `museum` are the required inputs in this case. An example input could be:
+Using a `POST` you can create a new painting item in the database. `name`,`movement`,`artist`,`yearCreated`, `museumName`, and `museumLocation` are the required inputs in this case. An example input could be:
 
 ```
 {
@@ -56,42 +84,53 @@ Using a `POST` you can create a new painting item in the database. `name`,`movem
     "movement": "expressionism",
     "artist": "Edvard Munch",
     "yearCreated": 1893,
-    "museum": {
-        "name": "National Gallery",
-        "location": "Oslo"
-    }
+    "museumName": "National Gallery",
+    "museumLocation": "Oslo"
 }
 ```
 
 #### GET /art/paintings/:id
-This will allow you to  look up a single item by it's `_id` property. For example:
+This will allow you to  look up a single item by it's `_id` property.
+
+In CouchDB your request will look like this:
 
 `GET` - `localhost:4000/art/paintings/painting_mona_lisa`
 
-Returns:
+In MySQL, it'll just be a numbered id and will look like this:
 
+`GET` - `localhost:4000/art/paintings/5`
+
+Both will return the same information about The Mona Lisa, however the object format will differ slightly.
+
+#### PUT /art/paintings/:id
+This will allow you to update an item in the database. Paintings are sometimes moved to different museums, or we learn new things about when they were painted
+
+>For example:  The Mona Lisa is believed to have been painted between 1503 and 1506; however, Leonardo may have continued working on it as late as 1517.
+
+It's important to have accurate data and you may want to update some of the fields in order to reflect the most up-to-date information. In that case, you'll want to use this endpoint!
+
+You'll need to be sure to include the `_id`, `_rev`, `name`, `movement`, `artist`, `yearCreated`, `museumName`, and `museumLocation` fields in your request.
+
+Example MySQL request:
+
+`PUT` - `localhost:4000/art/paintings/5`
+
+Example body:
 ```
 {
-    "_id": "painting_mona_lisa",
-    "_rev": "5-a8dedd6f6b5b302334cb05eaa03cb6e8",
     "name": "The Mona Lisa",
-    "type": "painting",
-    "movement": "renaissance",
     "artist": "Leonardo da Vinci",
-    "yearCreated": 1503,
-    "museum": {
-        "name": "The Louvre",
-        "location": "Paris"
-    }
+    "movement": "renaissance",
+    "museumName": "The Louvre",
+    "museumLocation": "Paris",
+    "yearCreated": "1503",
+    "_id": 7,
+    "type": "painting",
+    "_rev": null
 }
 ```
 
-#### PUT /art/paintings/:id
-This will allow you to update an item in the database. Paintings are sometimes moved to or borrowed by different museums and you may want to update to the location in order to keep all of your data accurate and up-to-date.
-
-You'll need to be sure to include the `_id`, `_rev`, `name`, `movement`, `artist`, `yearCreated`, and `museum` fields in your request.
-
-Example request:
+Example CouchDB request:
 
 `PUT` - `localhost:4000/art/paintings/painting_mona_lisa`
 
@@ -112,18 +151,19 @@ Example body:
     }
 }
 ```
-Change the values to whatever you want and then send your request.
+Change the values as needed and then send your request.
 
 #### DELETE /art/paintings/:id
 This one is pretty straightforward. Simply put the `_id` you want to delete into your request and send it. Hasta la vista, baby!
 
-Example request:
+Example MySQL request:
+`DELETE` - `localhost:4000/art/paintings/5`
+
+Example CouchDB request:
 `DELETE` - `localhost:4000/art/paintings/painting_mona_lisa`
 
-
-
 #### GET /art/paintings
-Using a `GET` to `localhost:4000/art/paintings` will display all of the paintings in the database.
+Using a `GET` to `localhost:4000/art/paintings` will display all of the paintings in the database. This is the same wether you are using CouchDB or MySQL.
 
 ##### Paginating and Limiting Results
 
@@ -133,11 +173,15 @@ Example request to modify the limit:
 
 `GET` - `localhost:4000/art/paintings?limit=2`
 
-That will limit you to two paintings.
+That will limit you to two paintings and this is also going to be the same no matter which database you are using.
 
-If you want to go to the next page of two, your request would look like this:
+However, this part is going to differ slightly between the two database options within this API. If you want to go to the next page of two, your CouchDB request would look like this:
 
 `GET` - `localhost:4000/art/paintings?limit=2&lastItem=painting_guernica`
+
+Whereas your MySQL request would look like this:
+
+`GET` - `localhost:4000/art/paintings?limit=2&lastItem=5`
 
 By using the `lastItem` query parameter you will be telling the API what the last listed item on the page was and it will show you the next two (or whatever number you've set your `limit` to).
 
@@ -145,7 +189,7 @@ By using the `lastItem` query parameter you will be telling the API what the las
 
 ##### Filtering
 
-You can also filter the results by `name`, `movement`, `artist` and `yearCreated` fields. This is going to be a pretty similar to limiting and paginating. Here's an example request and response:
+You can also filter the results by `name`, `movement`, `artist` and `yearCreated` fields. This is going to be a pretty similar to limiting and paginating and the requests are the same with both database options. Here's an example request and response:
 
 Request: `GET` - `localhost:4000/art/paintings?filter=movement:impressionism`
 
@@ -153,29 +197,25 @@ Response:
 ```
 [
     {
-        "_id": "painting_bal_du_moulin_de_la_galette",
-        "_rev": "1-681fd34c1b4819f308f7d92974503000",
+        "_id": 1 "painting_bal_du_moulin_de_la_galette",
+        "_rev": "null",
         "name": "Bal du moulin de la Galette",
         "type": "painting",
         "movement": "impressionism",
         "artist": "Pierre-Auguste Renoires",
         "yearCreated": 1876,
-        "museum": {
-            "name": "Musée d’Orsay",
-            "location": "Paris"
-        }
+        "museumName": "Musée d’Orsay",
+        "museumLocation": "Paris"
     },
     {
-        "_id": "painting_sunday_afternoon_on_the_island_of_la_grande_jatte",
-        "_rev": "1-19e6ee468fe4e3487b77b73e0c8f87fa",
+        "_id": "2",
+        "_rev": "null",
         "name": "A Sunday Afternoon on the Island of La Grande Jatte",
         "type": "painting",
         "movement": "impressionism",
         "artist": "Georges Seurat",
         "yearCreated": 1884,
-        "museum": {
-            "name": "Art Institute of Chicago",
-            "location": "Chicago"
-        }
+        "museumName": "Art Institute of Chicago",
+        "museumLocation": "Chicago"
     }
 ```

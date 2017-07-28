@@ -4,7 +4,8 @@ const app = express()
 const port = process.env.PORT || 4000
 const HTTPError = require('node-http-error')
 const { pathOr, keys, path } = require('ramda')
-const dal = require('./dal.js')
+
+const dal = require(`./${process.env.DAL}`)
 
 const bodyParser = require('body-parser')
 
@@ -14,7 +15,8 @@ const checkPaintingReqdFields = checkReqdFields([
   `movement`,
   `artist`,
   `yearCreated`,
-  `museum`
+  `museumName`,
+  `museumLocation`
 ])
 
 const checkUpdatedPaintingReqdFields = checkReqdFields([
@@ -24,7 +26,8 @@ const checkUpdatedPaintingReqdFields = checkReqdFields([
   `movement`,
   `artist`,
   `yearCreated`,
-  `museum`
+  `museumName`,
+  `museumLocation`
 ])
 
 app.use(bodyParser.json())
@@ -87,7 +90,7 @@ app.put('/art/paintings/:id', function(req, res, next) {
   if (!body || keys(body).length === 0)
     return next(new HTTPError(400, 'Missing painting in request body.'))
 
-  dal.updatePainting(body, callbackHelper(next, res))
+  dal.updatePainting(body, paintId, callbackHelper(next, res))
 })
 
 //////////////
