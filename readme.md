@@ -219,3 +219,77 @@ Response:
         "museumLocation": "Chicago"
     }
 ```
+
+##### Grouping
+
+There are two additional endpoints you can check out, however these two are going to be read-only; they're just another way to look at the data you're storing.
+
+The first of which is: `localhost:4000/art/reports/countbymovement`
+
+This will return an array with how many paintings you have in your database that are associated with a particular movement. Here's an example response:
+
+```
+{
+    "reportName": "Painting count by movement",
+    "reportData": [
+        {
+            "movementCount": 1,
+            "movement": "baroque"
+        },
+        {
+            "movementCount": 1,
+            "movement": "expressionism"
+        },
+        {
+            "movementCount": 1,
+            "movement": "post-impressionism"
+        },
+        {
+            "movementCount": 2,
+            "movement": "renaissance"
+        },
+        {
+            "movementCount": 1,
+            "movement": "surrealism"
+        }
+    ]
+}
+```
+
+The second endpoint is `localhost:4000/art/reports/countbycity`, and it returns a similar array, but instead is grouping by which city the paintings in your database are located in.
+
+Here's an example response:
+
+```
+{
+    "reportName": "Painting count by city",
+    "reportData": [
+        {
+            "cityCount": 1,
+            "museumLocation": "Madrid"
+        },
+        {
+            "cityCount": 1,
+            "museumLocation": "Milan"
+        },
+        {
+            "cityCount": 1,
+            "museumLocation": "New York"
+        },
+        {
+            "cityCount": 1,
+            "museumLocation": "Oslo"
+        },
+        {
+            "cityCount": 1,
+            "museumLocation": "Paris"
+        },
+        {
+            "cityCount": 1,
+            "museumLocation": "The Hague"
+        }
+    ]
+}
+```
+
+### The End
