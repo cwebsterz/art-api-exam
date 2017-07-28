@@ -197,7 +197,7 @@ Response:
 ```
 [
     {
-        "_id": 1 "painting_bal_du_moulin_de_la_galette",
+        "_id": 1,
         "_rev": "null",
         "name": "Bal du moulin de la Galette",
         "type": "painting",

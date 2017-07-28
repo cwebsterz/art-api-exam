@@ -22,7 +22,6 @@ INSERT INTO `art`.`painting` (`name`, `artist`, `movement`, `museumName`, `museu
 INSERT INTO `art`.`painting` (`name`, `artist`, `movement`, `museumName`, `museumLocation`, `yearCreated`) VALUES ('The Mona Lisa', 'Leonardo da Vinci', 'renaissance', 'The Louvre', 'Paris', '1503');
 INSERT INTO `art`.`painting` (`name`, `artist`, `movement`, `museumName`, `museumLocation`, `yearCreated`) VALUES ('The Starry Night', 'Vincent van Gogh', 'post-impressionism', 'Museum of Modern Art', 'New York', '1889');
 
-
 CREATE VIEW `groupbycity` AS
 
 SELECT count(ID) as locationCount, museumLocation
